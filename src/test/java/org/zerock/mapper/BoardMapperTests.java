@@ -17,11 +17,6 @@ public class BoardMapperTests {
 	@Setter(onMethod_ = @Autowired)
 	private BoardMapper mapper;
 	
-	@Test
-	public void testGetList() {
-		mapper.getList().forEach(board -> log.info(board));
-	}
-	
 //	@Test
 //	public void testInsert() {
 //		BoardVO board = new BoardVO();
@@ -33,18 +28,18 @@ public class BoardMapperTests {
 //		log.info("testInsert@@@@@ :  " +board);
 //		
 //	}
-//	
-//	@Test
-//	public void testInsertSelectKey() {
-//		BoardVO board = new BoardVO();
-//		board.setTitle("새로 작성하는 글 Select Key");
-//		board.setContent("새로 작성하는 내용 Select key");
-//		board.setWriter("newBie");
-//		mapper.insertSelectKey(board);
-//		
-//		log.info("testInsertSelectKey@@@@@ :  " +board);
-//	}
-//	
+	
+	@Test
+	public void testInsertSelectKey() {
+		BoardVO board = new BoardVO();
+		board.setTitle("새로 작성하는 글 Select Key");
+		board.setContent("새로 작성하는 내용 Select key");
+		board.setWriter("newBie");
+		mapper.insertSelectKey(board);
+		
+		log.info("testInsertSelectKey@@@@@ :  " +board);
+	}
+	
 //	@Test
 //	public void TestRead() {
 //		BoardVO board = mapper.read(5l);
@@ -66,4 +61,9 @@ public class BoardMapperTests {
 //		
 //	}
 //	
+	
+	@Test
+	public void testGetList() {
+		mapper.getList().forEach(board -> log.info(board));
+	}
 }
