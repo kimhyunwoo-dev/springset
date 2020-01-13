@@ -12,7 +12,7 @@
 </head>
 	
 <body>
-	
+		
 		<jsp:include page="../includes/header.jsp"></jsp:include>
 		
         <div id="page-wrapper">
@@ -20,7 +20,7 @@
                 <div class="col-lg-12">
                     <h1 class="page-header">Tables</h1>
                 </div>
-                <!-- /.col-lg-12 -->
+                <!-- /.col-lg-12 -->                
             </div>
             <!-- /.row -->
             <div class="row">
