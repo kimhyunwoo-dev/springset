@@ -3,23 +3,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-    <!-- Core CSS - Include with every page -->
-    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="../../../resources/font-awesome/css/font-awesome.css" rel="stylesheet">
-	
+    <title>Start Bootstrap - SB Admin Version 2.0 Demo</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/resources/font-awesome/css/font-awesome.css" rel="stylesheet">
+
     <!-- Page-Level Plugin CSS - Tables -->
-    <link href="../../../resources/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
-	
+    <link href="/resources/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+
     <!-- SB Admin CSS - Include with every page -->
-    <link href="/../../../resources/css/sb-admin.css" rel="stylesheet">
-	
-	  <script src="../../../resources/js/jquery-1.10.2.js"></script>
+    <link href="/resources/css/sb-admin.css" rel="stylesheet">
+
 </head>
 <body>
-	 <div id="wrapper">
+
+
+    <div id="wrapper">
 
         <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
@@ -348,6 +351,8 @@
             </div>
             <!-- /.navbar-static-side -->
         </nav>
-	</div>
+
+        <div id="page-wrapper">
+        <script src="https://ajax.googleapies.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </body>
 </html>
