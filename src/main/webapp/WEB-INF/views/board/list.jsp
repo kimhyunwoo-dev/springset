@@ -69,6 +69,12 @@
 			                                </form>
 		                                </div>
 	                                </div>
+	                                <script>
+	                            		var result1='<c:out value="${pageMaker.startPage}"/>';
+	                                	var result2='<c:out value="${pageMaker.endPage}"/>';
+	                            		console.log(result1,result2);
+	                                	
+	                                </script>
 	                                <div class="col-lg-6">
 		                                <div class="pull-right">
 		                                	<ul class="pagination">
