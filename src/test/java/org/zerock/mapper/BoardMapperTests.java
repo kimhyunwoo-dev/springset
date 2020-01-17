@@ -66,14 +66,22 @@ public class BoardMapperTests {
 	 * @Test public void testGetList() { mapper.getList().forEach(board ->
 	 * log.info(board)); }
 	 */
+//	@Test
+//	public void testPaging() {
+//		Criteria cri =new Criteria();
+//		cri.setPageNum(2);				
+//		cri.setAmount(100);	//61~ 90 				
+//		List<BoardVO> list = mapper.getListWithPaging(cri);
+//		list.forEach(action-> log.info(action + " : " +action.getBno()));
+//		
+//	}
+
 	@Test
-	public void testPaging() {
-		Criteria cri =new Criteria();
-		cri.setPageNum(2);				
-		cri.setAmount(100);	//61~ 90 				
+	public void testSearch() {
+		Criteria cri = new Criteria();
+		cri.setKeyword("hh");
+		cri.setType("TC");
 		List<BoardVO> list = mapper.getListWithPaging(cri);
-		list.forEach(action-> log.info(action + " : " +action.getBno()));
-		
+		list.forEach(action->log.info(action));
 	}
-	
 }
