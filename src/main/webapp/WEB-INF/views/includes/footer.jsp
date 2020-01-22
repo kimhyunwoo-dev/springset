@@ -16,14 +16,14 @@
 
     <!-- Page-Level Plugin Scripts - Tables -->
 <!-- 	<script src="/resources/js/plugins/dataTables/jquery.dataTables.js"></script> -->
-    <script src="/resources/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<!--     <script src="/resources/js/plugins/dataTables/dataTables.bootstrap.js"></script> -->
 
     <!-- SB Admin Scripts - Include with every page -->
     <script src="/resources/js/sb-admin.js"></script>
 
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
-/*     $(document).ready(function() {
+    /*  $(document).ready(function() {
         $('#dataTables-example').dataTable();
     }); */
     </script>

@@ -11,24 +11,24 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="org.zerock.controller" additivity="false">
+	<logger name="org.zerock.controller">
 		<level value="info" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->
-	<logger name="org.springframework.core" additivity="false">
+	<logger name="org.springframework.core">
 		<level value="info" />
 	</logger>
 	
-	<logger name="org.springframework.beans" additivity="false">
+	<logger name="org.springframework.beans">
 		<level value="info" />
 	</logger>
 	
-	<logger name="org.springframework.context" additivity="false">
+	<logger name="org.springframework.context">
 		<level value="info" />
 	</logger>
 
-	<logger name="org.springframework.web" additivity="false">
+	<logger name="org.springframework.web">
 		<level value="info" />
 	</logger>
 

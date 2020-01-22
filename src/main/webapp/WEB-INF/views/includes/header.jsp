@@ -13,7 +13,7 @@
     <link href="/resources/font-awesome/css/font-awesome.css" rel="stylesheet">
 
     <!-- Page-Level Plugin CSS - Tables -->
-    <link href="/resources/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <!-- <link href="/resources/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet"> -->
 
     <!-- SB Admin CSS - Include with every page -->
     <link href="/resources/css/sb-admin.css" rel="stylesheet">
@@ -353,6 +353,6 @@
         </nav>
 
         <div id="page-wrapper">
-        <script src="https://ajax.googleapies.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </body>
 </html>
