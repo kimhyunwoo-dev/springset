@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.domain.Criteria;
+import org.zerock.domain.ReplyPageDTO;
 import org.zerock.domain.ReplyVO;
 import org.zerock.domain.SampleDTO;
-import org.zerock.service.ReplyPageDTO;
 import org.zerock.service.ReplyService;
 
 import lombok.AllArgsConstructor;

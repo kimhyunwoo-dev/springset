@@ -11,8 +11,8 @@ var replyService=(function(){		//replyService는  익명함수인데 add함수�
 	
 	
 	function add(reply,callback){
-		console.log(reply);
-		console.log(callback);		//callback이 결국 add를 호출한쪽에서 add매개변수자리에 callback함수를 넣음.
+		//console.log(reply);
+		//console.log(callback);		//callback이 결국 add를 호출한쪽에서 add매개변수자리에 callback함수를 넣음.
 		//$.ajax(setting);
 		$.ajax({
 			type:"post",
@@ -21,7 +21,7 @@ var replyService=(function(){		//replyService는  익명함수인데 add함수�
 			contentType: "application/json; charset=utf-8",
 			success : function(result,status,xhr){
 				if(callback){		
-					console.log(result,status,xhr);		//success create , success , xhr 객체
+					//console.log(result,status,xhr);		//success create , success , xhr 객체
 					//result는 서버의 응답결과 ReplyController의 결과값 리턴 success create. status는 상태 success function자리니 success로  리턴함. xhr객체 리턴. 
 					callback(result);
 				}
@@ -41,8 +41,10 @@ var replyService=(function(){		//replyService는  익명함수인데 add함수�
 		$.getJSON("/replies/pages/"+bno+"/"+page+".json",	
 			function(data){
 				if(callback){
-					//callback(data);	
-					callback(data.replyCnt,data.list);
+					//console.log(data);
+					//callback(data);
+					console.log(data);
+					callback(data.replyCnt,data.list,data.map);
 				}
 			}
 		).fail(function(xhr,status,error){
@@ -58,7 +60,7 @@ var replyService=(function(){		//replyService는  익명함수인데 add함수�
 			url : "/replies/" + rno,
 			success : function(deleteResult,status,xhr){
 				if(callback){
-					console.log(deleteResult + "@@");
+					//console.log(deleteResult + "@@");
 					callback(deleteResult);
 				}
 			},
@@ -70,7 +72,7 @@ var replyService=(function(){		//replyService는  익명함수인데 add함수�
 		});
 	}
 	function update(reply,callback,error){
-		console.log("RNO : " + reply.rno);
+		//console.log("RNO : " + reply.rno);
 		$.ajax({
 			type: "put",
 			url : "/replies/" + reply.rno,
@@ -125,7 +127,7 @@ var replyService=(function(){		//replyService는  익명함수인데 add함수�
 		var today = new Date();
 		var gap = today.getTime()-timeValue;
 		
-		console.log(today.getTime(),timeValue);
+		//console.log(today.getTime(),timeValue);
 		
 		var dateObj = new Date(timeValue);
 		var str = "";

@@ -44,8 +44,7 @@
                             				<td><a class="move" href='<c:out value="${board.bno}"/>'><c:out value="${board.title}"></c:out></a></td>
                             				<td><c:out value="${board.writer}"></c:out></td>
                             				<td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.regdate}"/></td>
-                            				<td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.updateDate}"/></td>
-                            		
+                            				<td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.updateDate}"/></td>           		
                             			</tr>
                             		</c:forEach>      
                                 </table>
@@ -69,11 +68,7 @@
 			                                </form>
 		                                </div>
 	                                </div>
-	                                <script>
-	                            		var result1='<c:out value="${pageMaker.startPage}"/>';
-	                                	var result2='<c:out value="${pageMaker.endPage}"/>';
-	                            		console.log(result1,result2);
-	                                	
+	                                <script>	                                	
 	                                </script>
 	                                <div class="col-lg-6">
 		                                <div class="pull-right">
