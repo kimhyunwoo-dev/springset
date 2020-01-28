@@ -49,6 +49,7 @@ public class SampleController {
 	
 	@GetMapping(value = "/getList")
 	public List<SampleVO> getList(){
+	
 		return IntStream.range(1,10).mapToObj(i -> new SampleVO(i, i+"First", + i+"Last")).collect(Collectors.toList());
 	}
 	

@@ -11,6 +11,10 @@
 	<select id="read" resultType="org.zerock.domain.ReplyVO">
 		select * from tbl_reply where rno=#{rno}
 	</select>
+	<delete id="deleteAll">
+		delete from tbl_reply where bno=#{bno}
+	</delete>
+	
 	<delete id="delete">
 		delete from tbl_reply where rno=#{rno}
 	</delete>

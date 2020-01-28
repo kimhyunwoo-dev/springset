@@ -73,6 +73,7 @@ var replyService=(function(){		//replyService는  익명함수인데 add함수�
 	}
 	function update(reply,callback,error){
 		//console.log("RNO : " + reply.rno);
+		
 		$.ajax({
 			type: "put",
 			url : "/replies/" + reply.rno,

@@ -4,9 +4,11 @@ import java.util.List;
 
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
 import org.zerock.mapper.BoardMapper;
+import org.zerock.mapper.ReplyMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -17,6 +19,8 @@ import lombok.extern.log4j.Log4j;
 public class BoardServiceImpl implements BoardService{
 
 	private BoardMapper mapper;
+	
+	private ReplyMapper replyMapper;
 	
 	@Override
 	public void register(BoardVO board) {
@@ -40,11 +44,13 @@ public class BoardServiceImpl implements BoardService{
 		return mapper.update(board)==1;
 	}
 
+	@Transactional
 	@Override
 	public boolean remove(Long bno) {
 		// TODO Auto-generated method stub
 		log.info("modify....."+bno);
 		
+		replyMapper.deleteAll(bno);
 		return mapper.delete(bno)==1;
 	}
 

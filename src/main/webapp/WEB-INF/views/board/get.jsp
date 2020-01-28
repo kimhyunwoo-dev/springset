@@ -143,7 +143,12 @@ $(document).ready(function(){
 			}
 			var str="";
 			if(list==null || list.length==0){
-				return;
+				str+="<li class='left clearfix'>";
+				str+=" <div>";
+				str+="	<p>댓글이 없습니다.</p>"	
+				str+=" </div>";
+				str+="</li>";
+				
 			}
 			for(var i=0, len=list.length || 0; i< len; i++){
 				str+="<li class='left clearfix' data-rno='"+list[i].rno+"'>";
@@ -228,7 +233,12 @@ $(document).ready(function(){
 	var modalModBtn=$("#modalModBtn");
 	var modalRemoveBtn=$("#modalRemoveBtn");
 	var modalRegisterBtn=$("#modalRegisterBtn");
+	var modalCloseBtn=$("#modalCloseBtn");
 	
+	modalCloseBtn.on("click",function(){
+		modal.find("input").val("");
+		modal.modal("hide");
+	});
 	
 	
 	$("#addReplyBtn").on("click",function(){
@@ -258,8 +268,11 @@ $(document).ready(function(){
 
 	// 댓글목록에 보이는 댓글들(li)를 눌렀을때 동작하는 이벤트 reply.js get함수 호출. 
 	$(".chat").on("click","li",function(e){
+
 		var rno=$(this).data("rno");
 		replyService.get(rno,function(reply){
+			modalInputReplyDate.closest("div").show();
+			modalInputReplyer.attr("readonly","readonly");
 			modalInputReply.val(reply.reply)
 			modalInputReplyer.val(reply.replyer);
 			modalInputReplyDate.val(replyService.displayTime(reply.replyDate)).attr("readonly","readonly");
@@ -278,7 +291,6 @@ $(document).ready(function(){
 	modalModBtn.on("click",function(){
 		alert(modal.data("rno"));
 		var reply={rno:modal.data("rno") ,bno:bnoValue, reply:modalInputReply.val()};
-
 		replyService.update(reply,function(result){
 			alert(result);
 			modal.modal("hide");	//모달창 숨기기		modal.modal("hide"); 모달창 보이기 modal.modal("show");
