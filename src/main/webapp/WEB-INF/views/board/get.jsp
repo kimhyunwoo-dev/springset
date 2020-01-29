@@ -242,7 +242,7 @@ $(document).ready(function(){
 	
 	
 	$("#addReplyBtn").on("click",function(){
-		
+		modalInputReplyer.removeAttr("readonly");
 		modal.find("input").val("");
 		modalInputReplyDate.closest("div").hide();
 		modal.find("button[id!='modalCloseBtn']").hide();
@@ -290,6 +290,7 @@ $(document).ready(function(){
 	//리플 get함수 호출후 모달창 안에서 수정버튼을 눌렀을때
 	modalModBtn.on("click",function(){
 		alert(modal.data("rno"));
+		
 		var reply={rno:modal.data("rno") ,bno:bnoValue, reply:modalInputReply.val()};
 		replyService.update(reply,function(result){
 			alert(result);
