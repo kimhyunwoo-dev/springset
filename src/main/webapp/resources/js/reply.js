@@ -113,6 +113,7 @@ var replyService=(function(){		//replyService는  익명함수인데 add함수�
 		
 		
 		$.get("/replies/"+rno+".json",function(result){
+			console.log(result);
 			if(callback){
 				callback(result);
 			}

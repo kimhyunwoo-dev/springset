@@ -67,7 +67,7 @@ public class ReplyController {
 	
 	@GetMapping(value="/{rno}", produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public ResponseEntity<ReplyVO> get(@PathVariable("rno") Long rno){
-		log.info("get : " + rno);
+		log.info("replyController get 메소드 호출 리턴값 : " + service.get(rno));
 		return new ResponseEntity<ReplyVO>(service.get(rno),HttpStatus.OK);
 		
 	}
