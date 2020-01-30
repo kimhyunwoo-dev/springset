@@ -17,7 +17,56 @@
 
     <!-- SB Admin CSS - Include with every page -->
     <link href="/resources/css/sb-admin.css" rel="stylesheet">
-
+	
+	
+	<style>
+	
+		.uploadResult{
+			width : 100%;
+			background-color : gray;
+		}
+		
+		.uploadResult ul{
+			display : flex;
+			flex-floe : row;
+			justify-content : center;
+			align-itmes : center;
+		}
+		
+		.uploadResult ul li{
+			list-style : none;
+			padding : 10px;
+		}
+		
+		.uploadResult ul li img{
+			width : 20px;
+		}
+		
+		.bigPictureWrapper{
+			position : absolute;
+			display : none;
+			justify-content : center;
+			align-items : center;
+			top : 0%;
+			width : 100%;
+			height : 100%;
+			background-color : gray;
+			z-index : 100;
+			background : rgba(255,255,255,0.5);
+		}
+		.bigPicture{
+			position : relative;
+			display : flex;
+			justify-content : center;
+			align-items : center;
+		}
+		
+		.bigPicture img {
+			width : 600px;
+		}
+		
+	</style>
+	
 </head>
 <body>
 
