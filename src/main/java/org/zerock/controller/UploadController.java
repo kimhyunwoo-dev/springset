@@ -3,6 +3,9 @@ package org.zerock.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,13 +13,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.domain.AttachFileDTO;
@@ -32,6 +41,56 @@ public class UploadController {
 	public void uploadForm() {
 		log.info("upload form");
 	}
+	
+	@GetMapping(value="/download", produces=MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public ResponseEntity<Resource> downloadFile(@RequestHeader("User-Agent")String userAgent, String fileName){
+		Resource resource = new FileSystemResource("c:\\upload\\"+fileName);
+		log.info("download file : " + fileName);	//download file : 2020\01\30/2eb451ae-8706-4e97-9742-644bcd8bbe96_gg.pptx	1.원본 요청
+		log.info("resource : " + resource);		// resource : file [c:upload\2020\01\30\2eb451ae-8706-4e97-9742-644bcd8bbe96_gg.pptx] 2.resource객체변환
+			
+		
+		if(resource.exists()==false) { return new
+		  ResponseEntity<Resource>(HttpStatus.NOT_FOUND);
+		}
+		 
+		String resourceName = resource.getFilename();		
+		log.info("resourceName 변수 : " + resourceName);			//resourceName 변수 : 2eb451ae-8706-4e97-9742-644bcd8bbe96_gg.pptx
+		
+		
+		String resourceOriginalName = resourceName.substring(resourceName.indexOf("_")+1);		//indexOf _ 을 정규식표현식으로 바꿔보기 으로바꾸기
+																	//gg.pptx
+		
+		
+		HttpHeaders headers = new HttpHeaders();
+		
+		try {
+			String downloadName = null;
+			if(userAgent.contains("Trident")) {
+				//IE
+				log.info("IE BROWSER");
+				downloadName = URLEncoder.encode(resourceOriginalName,"UTF-8");
+			}else if(userAgent.contains("Edge")){
+				//EDGE
+				downloadName = URLEncoder.encode(resourceOriginalName,"UTF-8");
+				log.info("EDGE BROWSER");
+			}else {
+				//CROME
+				downloadName = new String(resourceOriginalName.getBytes("UTF-8"),"ISO-8859-1");
+				log.info("CROME BROWSER");
+				
+			}	
+			log.info("downloadName : " + downloadName);
+			headers.add("Content-Disposition", "attachment; filename="+downloadName);
+			
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<Resource>(resource , headers , HttpStatus.OK);
+	}
+	
 	
 	@PostMapping("/uploadFormAction")
 	public void uploadFormPost(MultipartFile[] uploadFile, Model model) {
@@ -81,14 +140,17 @@ public class UploadController {
 		for(MultipartFile multipartFile : uploadFile) {
 			AttachFileDTO attachDTO = new AttachFileDTO();
 
-			log.info("--------------------------------");
-			log.info("UpLoad File Name : " + multipartFile.getOriginalFilename());
-			log.info("Upload File Size : " + multipartFile.getSize());
-			log.info(" uploadPath : " +uploadPath);
+//			log.info("--------------------------------");
+//			log.info("UpLoad File Name : " + multipartFile.getOriginalFilename());
+//			log.info("Upload File Size : " + multipartFile.getSize());
+//			log.info(" uploadPath : " +uploadPath);
 			
 			String uploadFileName=null;
 			uploadFileName = multipartFile.getOriginalFilename();
-			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
+//			log.info("uploadFileName lastIndexOf 함수 전  : " + uploadFileName);
+			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);		//IE는 전체파일경로가 리턴되므로 IE용 코드./
+//			log.info("uploadFileName lastIndexOf 함수 후 : " + uploadFileName);
+//			log.info("original FileName : " + multipartFile.getOriginalFilename());
 			attachDTO.setFileName(uploadFileName);															//attach객체
 			
 			
@@ -143,6 +205,65 @@ public class UploadController {
 		}
 		return false;
 	}
-
+	
+	@GetMapping("/display")
+	@ResponseBody
+	public ResponseEntity<byte[]> getFile(String fileName){
+		log.info("----------getFile() 함수 ------------------ ");
+		log.info("fileName : " + fileName);
+		File file = new File("c:\\upload\\"+fileName);
+		log.info("file 객체 : " + file);
+		
+		ResponseEntity<byte[]> result = null;
+		
+		HttpHeaders header = new HttpHeaders();
+		
+		try {
+			
+			header.add("Content-Type", Files.probeContentType(file.toPath()));
+			log.info("probeContentTpye(file.toPath()) : " + Files.probeContentType(file.toPath()));
+			log.info("file.toPath() : " + file.toPath());
+			result=new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file),header,HttpStatus.OK);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		log.info("----------getFile() 함수 ------------------ ");
+		return result;
+		
+	}
+	
+	@PostMapping("/deleteFile")
+	@ResponseBody
+	public ResponseEntity<String> deleteFile(String fileName, String type){
+		
+		log.info("-------------deleteFile 함수 호출 -----------");
+		
+		File file;
+		
+			try {
+				file=new File("c:\\upload\\"+URLDecoder.decode(fileName,"UTF-8"));
+				file.delete();
+				
+				if(type.equals("image")) {
+					String largeFileName = file.getAbsolutePath().replace("s_", "");
+					log.info("largeFileName : " + largeFileName);
+					
+					file= new File(largeFileName);
+					file.delete();	
+				}
+				
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+			}
+		
+		log.info("-------------deleteFile 함수 호출 -----------");
+		
+		return new ResponseEntity<String>("delete",HttpStatus.OK);
+	}
+	
+	
 	
 }
