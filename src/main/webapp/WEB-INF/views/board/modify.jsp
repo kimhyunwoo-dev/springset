@@ -6,11 +6,70 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+
+	.uploadResult{
+		width : 100%;
+		background-color : gray;
+	}
+	
+	.uploadResult ul{
+		display : flex;
+		flex-flow : row;
+		justify-content : center;
+		align-itmes : center;
+	}
+	
+	.uploadResult ul li{
+		list-style : none;
+		padding : 10px;
+		align-content: center;
+		text-align : center;
+	}
+	
+	.uploadResult ul li img{
+		width : 100px;
+	}
+	
+	.uploadResult ul li span{
+		color : white;
+	}
+	
+	.bigPictureWrapper{
+		position : absolute;
+		display : none;
+		justify-content : center;
+		align-items : center;
+		top : 0%;
+		width : 100%;
+		height : 100%;
+		background-color : gray;
+		z-index : 100;
+		background : rgba(255,255,255,0.5);
+	}
+	.bigPicture{
+		position : relative;
+		display : flex;
+		justify-content : center;
+		align-items : center;
+	}
+	
+	.bigPicture img {
+		width : 600px;
+	}
+	
+</style>
+
 </head>
 <body>
 
 	<%@include file="../includes/header.jsp"%>
 
+<div class="bigPictureWrapper">
+	<div class="bigPicture">
+	
+	</div>
+</div>
 
 
 
@@ -62,15 +121,71 @@
 			</div>
 		</div>
 	</div>
-
+	<!-- 첨부파일의 목록을 보여주는곳 (썸네일)-->
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">Files</div>
+				<div class="panel-body">
+					<div class="form-group uploadDiv">
+						<input type="file" name="uploadFile" multiple="multiple">
+					</div> 
+					<div class="uploadResult">
+						<ul>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<%@include file="../includes/footer.jsp"%>
 	
 	
 	<script type="text/javascript">
 	$(document).ready(function(){
 
+		(function(){
+	 		var bno="<c:out value='${board.bno}'/>";
+	 		$.getJSON("/board/getAttachList",{bno:bno},function(arr){
+	 			console.log(arr);
+	 			
+	 			var str="";
+	 			
+	 			$(arr).each(function(i,attach){
+	 			
+	 				if(attach.fileType){
+	 					var fileCallPath = encodeURIComponent(attach.uploadPath+"/s_"+attach.uuid+"_"+attach.fileName);
+	 					
+	 					str+="<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>";
+	 					str+="	<div>";
+	 					str+="		<span>"+attach.fileName+"</span>";
+	 					str+="  	<button type='button' data-file='"+fileCallPath+"' data-type='image' ";
+	 					str+="		class='btn btn-warning btn-circle'>";
+	 					str+="			<i class='fa fa-times'></i>";
+	 					str+="		</button><br/>";
+	 					str+="		<img src='/display?fileName="+fileCallPath+"'>";
+	 					str+="	</div>";
+	 					str+="</li>";
+	 	 			}else{
+	 	 				str+="<li data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>";
+	 					str+="	<div>";
+	 					str+="		<span>"+attach.fileName+"</span><br/>";
+	 					str+="  	<button type='button' data-file='"+fileCallPath+"' data-type='image' ";
+	 					str+="		class='btn btn-warning btn-circle'>";
+	 					str+="			<i class='fa fa-times'></i>";
+	 					str+="		</button><br/>";
+	 					str+="		<img src='/resources/img/attach.png'>";
+	 					str+="	</div>";
+	 					str+="</li>";
+	 	 			}
+	 			});
+	 			$(".uploadResult ul").html(str);	
+	 		});
+	 	})();
+		
 		var formObj = $("form");
 		$("button").on("click",function(e){
+			alert("@@@");
 			e.preventDefault();
 			
 			var operation=$(this).data("oper");
@@ -92,10 +207,119 @@
 					formObj.append(typeTag); 
 				
 			
+			}else if(operation==="modify"){
+				console.log("submit clicked");
+				var str="";
+				
+				$(".uploadResult ul li").each(function(i,obj){
+					var jobj=$(obj);
+					
+					console.dir(jobj);
+					
+					str+="<input type='hidden' name='attachList["+i+"].fileName' value='"+jobj.data("filename")+"'>";
+					str+="<input type='hidden' name='attachList["+i+"].uuid' value='"+jobj.data("uuid")+"'>";
+					str+="<input type='hidden' name='attachList["+i+"].uploadPath' value='"+jobj.data("path")+"'>";
+					str+="<input type='hidden' name='attachList["+i+"].fileType' value='"+jobj.data("type")+"'>";
+					
+				});
+				formObj.append(str).submit();
 			}
 			formObj.submit();
 			
 		});
+		
+		$(".uploadResult").on("click","button",function(e){
+			console.log("delete file");
+			if(confirm("Remove this file? ")){
+				var targetLi = $(this).closest("li");
+				targetLi.remove();
+			}
+		});
+		
+		
+	function showUploadResult(uploadResultArr){
+			
+			if(!uploadResultArr || uploadResultArr.length==0){
+				return;
+			}
+			
+			var uploadUL = $(".uploadResult ul");
+			var str="";
+			
+			$(uploadResultArr).each(function(i,obj){
+				if(obj.image){
+					var fileCallPath = encodeURIComponent(obj.uploadPath+"/s_"+obj.uuid+"_"+obj.fileName);
+					str+="<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.image+"'>";
+					str+="	<div>";
+					str+="		<span>"+obj.fileName+"</span>";
+					str+="		<button type='button' data-file='"+fileCallPath+"' data-type='image' class='btn btn-warning btn-circle'>";
+					str+="			<i class='fa fa-times'></i>";
+					str+="		</button><br>";
+					str+="		<img src='/display?fileName="+fileCallPath+"'>";
+					str+="	</div>";
+					str+="</li>";
+					
+				}else{
+					var fileCallPath= encodeURIComponent(obj.uploadPath+"/"+obj.uuid+"_"+obj.fileName);
+					var fileLink = fileCallPath.replace(new RegExp(/\\/g),"/");
+					str+="<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.image+"'>";
+					str+="	<div>";
+					str+="		<span>"+obj.fileName+"</span>";
+					str+="		<button type='button'  data-file='"+fileCallPath+"' data-type='file' class='btn btn-warning btn-circle'>";
+					str+="			<i class='fa fa-times'></i>";
+					str+="		</button><br>";
+					str+="		<img src='/resources/img/attach.png'>";
+					str+="	</div>";
+					str+="</li>";
+					
+				}
+			});
+			uploadUL.html(str)
+			//uploadUL.append(str);
+		}
+		
+		function checkExtension(fileName, fileSize){
+			if(fileSize > maxSize){
+				alert("파일사이즈 초과");
+				return;
+			}
+			if(regex.test(fileName)){
+				alert("해당 종류의 파일은 업로드 할 수 없습니다.");
+				return false;
+			}
+			return true;
+		}
+		
+		
+		//파일이 바뀔때마다.
+		$("input[type='file']").change(function(e){
+			var formData =new FormData();
+			var inputFile=$("input[name='uploadFile']");
+			var files=inputFile[0].files;
+			console.log(files);
+			for(var i=0; i<files.length; i++){
+				if(!checkExtension(files[i].name,files[i].size)){
+					return false;
+				}
+				formData.append("uploadFile",files[i]);
+			}
+			
+			$.ajax({
+				url : "/uploadAjaxAction",
+				processData : false,
+				contentType : false,
+				data : formData,
+				type : "POST",
+				dataType :'json',
+				success : function(result){
+					console.log(result);
+					showUploadResult(result);
+				}
+			});
+			
+		});
+		
+		
 	});
 	
 </script>

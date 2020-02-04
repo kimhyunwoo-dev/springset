@@ -1,5 +1,14 @@
 package org.zerock.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,7 +16,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.zerock.domain.BoardAttachVO;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
 import org.zerock.domain.PageDTO;
@@ -44,7 +55,18 @@ public class BoardController {
 	
 	@PostMapping("/register")
 	public String register(BoardVO board, RedirectAttributes rttr) {
-		log.info("register : " + board);
+		
+		log.info("-------postmapping /register -------");
+		log.info("register : " + board );
+		
+		if(board.getAttachList()!= null) {
+			board.getAttachList().forEach(action->log.info(action));
+		}
+		
+		
+		log.info("------------------------------------");
+		
+		
 		service.register(board);
 		rttr.addFlashAttribute("result" , board.getBno());
 		return "redirect:/board/list";		//redirect :  는 스프링에서 사용하는 jsp의 response.sendRedirect와 같음.
@@ -62,25 +84,30 @@ public class BoardController {
 			rttr.addFlashAttribute("result","success");
 		}
 		
-		rttr.addAttribute("pageNum",cri.getPageNum());
-		rttr.addAttribute("amount", cri.getAmount());
-		rttr.addAttribute("type", cri.getType());
-		rttr.addAttribute("keyword", cri.getKeyword());
-		return "redirect:/board/list";
+//		rttr.addAttribute("pageNum",cri.getPageNum());
+//		rttr.addAttribute("amount", cri.getAmount());
+//		rttr.addAttribute("type", cri.getType());
+//		rttr.addAttribute("keyword", cri.getKeyword());
+//		return "redirect:/board/list";
+		return "redirect:/board/list" + cri.getListLink();
 	}
 	
 	@PostMapping("/remove")
 	public String delete(@RequestParam("bno") Long bno , @ModelAttribute("cri") Criteria cri ,RedirectAttributes rttr) {
 		log.info("remove..." + bno);
-		if(service.remove(bno)) {
-			rttr.addFlashAttribute("result","success");
-		}
 		
-		rttr.addAttribute("pageNum",cri.getPageNum());
-		rttr.addAttribute("amount", cri.getAmount());
-		rttr.addAttribute("type", cri.getType());
-		rttr.addAttribute("keyword", cri.getKeyword());
-		return "redirect:/board/list";
+		List<BoardAttachVO> attachList = service.getAttachList(bno);
+		
+		if(service.remove(bno)) {			//게시물과 함게 파일과 관련된 데이터베이스 삭제.
+			deleteFiles(attachList);		//실 경로에 있는 파일삭제	
+			rttr.addFlashAttribute("result","success");		
+		}
+//		rttr.addAttribute("pageNum",cri.getPageNum());
+//		rttr.addAttribute("amount", cri.getAmount());
+//		rttr.addAttribute("type", cri.getType());
+//		rttr.addAttribute("keyword", cri.getKeyword());
+//		return "redirect:/board/list";
+		return "redirect:/board/list" + cri.getListLink();
 	}
 	
 	@GetMapping("/register")
@@ -88,6 +115,40 @@ public class BoardController {
 		
 	}
 	
+	@GetMapping(value="/getAttachList", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<BoardAttachVO>> getAttachList(Long bno){
+	
+		
+		log.info("attachList : " + service.getAttachList(bno));
+		return new ResponseEntity<>(service.getAttachList(bno),HttpStatus.OK);
+	}
+	
+	private void deleteFiles(List<BoardAttachVO> attachList) {
+		if(attachList==null || attachList.size()==0) {
+			return;
+		}
+		
+		log.info("delete attach files......");
+		log.info(attachList);
+		
+		attachList.forEach(attach->{
+			Path file = Paths.get("C:\\upload\\"+attach.getUploadPath()+"\\"+attach.getUuid()+"_"+attach.getFileName());
+			try {
+				Files.deleteIfExists(file);
+				if(Files.probeContentType(file).startsWith("image")) {
+					Path thumbNail = Paths.get("C:\\upload\\"+attach.getUploadPath()+"\\s_"+attach.getUuid()+"_"+attach.getFileName());
+					Files.delete(thumbNail);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				log.info("delete file error " + e.getMessage() );
+				
+			}
+		});
+		
+	}
 
 	
 }

@@ -56,12 +56,8 @@ public class UploadController {
 		 
 		String resourceName = resource.getFilename();		
 		log.info("resourceName 변수 : " + resourceName);			//resourceName 변수 : 2eb451ae-8706-4e97-9742-644bcd8bbe96_gg.pptx
-		
-		
+
 		String resourceOriginalName = resourceName.substring(resourceName.indexOf("_")+1);		//indexOf _ 을 정규식표현식으로 바꿔보기 으로바꾸기
-																	//gg.pptx
-		
-		
 		HttpHeaders headers = new HttpHeaders();
 		
 		try {
@@ -140,26 +136,14 @@ public class UploadController {
 		for(MultipartFile multipartFile : uploadFile) {
 			AttachFileDTO attachDTO = new AttachFileDTO();
 
-//			log.info("--------------------------------");
-//			log.info("UpLoad File Name : " + multipartFile.getOriginalFilename());
-//			log.info("Upload File Size : " + multipartFile.getSize());
-//			log.info(" uploadPath : " +uploadPath);
-			
 			String uploadFileName=null;
 			uploadFileName = multipartFile.getOriginalFilename();
-//			log.info("uploadFileName lastIndexOf 함수 전  : " + uploadFileName);
 			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);		//IE는 전체파일경로가 리턴되므로 IE용 코드./
-//			log.info("uploadFileName lastIndexOf 함수 후 : " + uploadFileName);
-//			log.info("original FileName : " + multipartFile.getOriginalFilename());
 			attachDTO.setFileName(uploadFileName);															//attach객체
-			
-			
+
 			UUID uuid = UUID.randomUUID();
 			uploadFileName = uuid.toString() + "_" + uploadFileName;
 			
-			
-			
-			//File saveFile = new File(uploadFolder , uploadFileName);
 			File saveFile = new File(uploadPath , uploadFileName);
 			try {
 				multipartFile.transferTo(saveFile);
@@ -196,8 +180,11 @@ public class UploadController {
 	
 	private boolean checkImageType(File file) {
 		try {
-			log.info("file.toPath() 함수 호출 : " + file.toPath() );
-			log.info("Files.probeContentType(file.toPath()) 함수 호출 : " + Files.probeContentType(file.toPath()) );
+			/*
+			 * log.info("file.toPath() 함수 호출 : " + file.toPath() );
+			 * log.info("Files.probeContentType(file.toPath()) 함수 호출 : " +
+			 * Files.probeContentType(file.toPath()) );
+			 */
 			String contentType = Files.probeContentType(file.toPath());		//probeContentType은 무슨 타입인지 알기위해 쓰는것같다.
 			return contentType.startsWith("image");		//특정글자가 imaga로 시작하는지 물음.
 		}catch(IOException e) {
@@ -209,28 +196,18 @@ public class UploadController {
 	@GetMapping("/display")
 	@ResponseBody
 	public ResponseEntity<byte[]> getFile(String fileName){
-		log.info("----------getFile() 함수 ------------------ ");
-		log.info("fileName : " + fileName);
 		File file = new File("c:\\upload\\"+fileName);
-		log.info("file 객체 : " + file);
-		
 		ResponseEntity<byte[]> result = null;
-		
 		HttpHeaders header = new HttpHeaders();
-		
 		try {
 			
 			header.add("Content-Type", Files.probeContentType(file.toPath()));
-			log.info("probeContentTpye(file.toPath()) : " + Files.probeContentType(file.toPath()));
-			log.info("file.toPath() : " + file.toPath());
 			result=new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file),header,HttpStatus.OK);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		log.info("----------getFile() 함수 ------------------ ");
-		return result;
-		
+		return result;	
 	}
 	
 	@PostMapping("/deleteFile")
@@ -264,6 +241,5 @@ public class UploadController {
 		return new ResponseEntity<String>("delete",HttpStatus.OK);
 	}
 	
-	
-	
+
 }
