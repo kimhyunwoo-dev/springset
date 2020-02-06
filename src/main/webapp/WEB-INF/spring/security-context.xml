@@ -5,14 +5,28 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<security:http>
+	<bean id="customAccessDenied" class="org.zerock.security.CustomAccessDeniedHandler"></bean>
+	<bean id="customLoginSuccess" class="org.zerock.security.CustoLoginSuccessHandler"></bean>
+	<security:http auto-config="true" use-expressions="true">
 	
 		<security:intercept-url pattern="/securitySample/all" access="permitAll"/>
 		<security:intercept-url pattern="/securitySample/member" access="hasRole('ROLE_MEMBER')"/>
+		<security:intercept-url pattern="/securitySample/admin" access="hasRole('ROLE_ADMIN')"/>
 		
-		<security:form-login/>
+		
+		<!-- ex :  member유저가 admin에 접속하려고 할 때. 특정 사용자가 로그인은 했지만 uri접근권한이 없는 상황 -->
+		<!-- <security:access-denied-handler error-page="/accessError"/> --> <!-- 인터페이스를 구현해서 사용하지 않는경우.-->
+		<security:access-denied-handler ref="customAccessDenied"/>			<!-- 인터페이스를 구현해서 사용하는 경우. 쿠키나 세션에 작업이나 특정한 헤더 정보를 추가하는 등의 행위를 더할 수 있음.-->
+		<security:form-login login-page="/customLogin" authentication-success-handler-ref="customLoginSuccess"></security:form-login>	<!-- 로그인 후 페이지핸들러 -->
+		<security:logout logout-url="/customLogout" invalidate-session="true"/>
 	</security:http>
 	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="member" password="{noop}member" authorities="ROLE_MEMBER"/>
+				<security:user name="admin" password="{noop}admin" authorities="ROLE_MEMBER, ROLE_ADMIN"/>
+			</security:user-service>
+		</security:authentication-provider>
 	</security:authentication-manager>
 		
 </beans>

@@ -7,6 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+<h1>/sample/admin page</h1>
+<a href="/customLogout">Logout</a>
 
 </body>
 </html>
