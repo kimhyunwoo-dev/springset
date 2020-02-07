@@ -22,9 +22,9 @@
 		<property name="jdbcUrl"
 			value="jdbc:oracle:thin:@localhost:1521:orcl"></property> -->
 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
-		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:orcl"></property>
-		<property name="username" value="book_ex"></property>
-		<property name="password" value="book_ex"></property>
+		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe"></property>
+		<property name="username" value="ora_user"></property>
+		<property name="password" value="1234"></property>
 	</bean>
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
 		destroy-method="close">
@@ -43,7 +43,6 @@
 	<tx:annotation-driven/>
 	
 	<mybatis-spring:scan base-package="org.zerock.mapper"/>
-	
 	<context:component-scan base-package="org.zerock.service"></context:component-scan>
 	<context:component-scan base-package="org.zerock.task"></context:component-scan>
 	<task:annotation-driven/>

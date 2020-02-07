@@ -342,6 +342,7 @@ $(document).ready(function(){
 		};
 		replyService.add(reply,function(result){
 			alert(result);
+			console.log(result+"@@");
 			modal.find("input").val("");
 			modal.modal("hide");
 			showList(-1);
