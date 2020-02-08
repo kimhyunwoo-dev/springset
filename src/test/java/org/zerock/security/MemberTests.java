@@ -25,39 +25,39 @@ public class MemberTests {
 	@Setter(onMethod_ = @Autowired)
 	private DataSource ds;
 	
-//	@Test
-//	public void testInsertMember() {
-//		String sql="insert into tbl_member(userid,userpw,username) values(?,?,?)";
-//		
-//		for(int i=0; i<100; i++) {
-//			Connection con=null;
-//			PreparedStatement pstmt=null;
-//			
-//			try {
-//				con=ds.getConnection();
-//				pstmt=con.prepareStatement(sql);
-//				pstmt.setString(2, pwencoder.encode("pw"+i));
-//				if(i<80) {
-//					pstmt.setString(1,"user"+i );
-//					pstmt.setString(3, "일반사용자"+i);
-//				}else if(i<90) {
-//					pstmt.setString(1,"manager"+i );
-//					pstmt.setString(3, "운영자"+i);
-//				}else {
-//					pstmt.setString(1,"admin"+i );
-//					pstmt.setString(3, "관리자"+i);
-//				}
-//
-//				pstmt.executeUpdate();
-//			} catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} finally {
-//				if(pstmt!=null) {try {pstmt.close();} catch (SQLException e) {}}
-//				if(con!=null) {try {con.close();} catch (SQLException e) {}}
-//			}
-//		}
-//	}
+	@Test
+	public void testInsertMember() {
+		String sql="insert into tbl_member(userid,userpw,username) values(?,?,?)";
+		
+		for(int i=0; i<100; i++) {
+			Connection con=null;
+			PreparedStatement pstmt=null;
+			
+			try {
+				con=ds.getConnection();
+				pstmt=con.prepareStatement(sql);
+				pstmt.setString(2, pwencoder.encode("pw"+i));
+				if(i<80) {
+					pstmt.setString(1,"user"+i );
+					pstmt.setString(3, "일반사용자"+i);
+				}else if(i<90) {
+					pstmt.setString(1,"manager"+i );
+					pstmt.setString(3, "운영자"+i);
+				}else {
+					pstmt.setString(1,"admin"+i );
+					pstmt.setString(3, "관리자"+i);
+				}
+
+				pstmt.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				if(pstmt!=null) {try {pstmt.close();} catch (SQLException e) {}}
+				if(con!=null) {try {con.close();} catch (SQLException e) {}}
+			}
+		}
+	}
 	
 	@Test
 	public void testInsertAuth() {
